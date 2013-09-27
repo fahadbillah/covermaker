@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset=utf-8>
+<meta name="viewport" content="width=620">
+<title>Cover Maker</title>
+<link rel="stylesheet" href="css/bootstrap.min.css">
+<link rel="stylesheet" href="css/bootstrap-responsive.min.css">
+</head>
+<body style="background-color:#d2d1cf;">
+<section id="wrapper">
+<!-- <div id="carbonads-container"><div class="carbonad"><div id="azcarbon"></div><script type="text/javascript">var z = document.createElement("script"); z.type = "text/javascript"; z.async = true; z.src = "http://engine.carbonads.com/z/14060/azcarbon_2_1_0_VERT"; var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(z, s);</script></div></div>
+ -->    
+
+<style>
+.holder { border: 3px dashed #ccc; width: 100px; height: 100px; margin: 20px auto; float: left; margin-bottom: 0px; margin-top: 0px;}
+.holder.hover {/* border: 1px dashed #333;*/ }
+.holder1{
+  -webkit-user-transform: matrix(0.866,0.5,-0.5,0.866,0,0);
+}
+.holder2{
+  
+}
+.holder3{
+  
+}
+.holder4{
+  
+}
+.holder5{
+  
+}
+.holder6{
+  
+}
+.holder7{
+  
+}
+.holder8{
+  
+}
+td{    
+  padding-bottom: 0px;
+  padding-left: 0px;
+  padding-right: 0px;
+  padding-top: 0px;
+}
+</style>
+<div class="container-fluid" align="center">
+  <div id="tableDiv" style="position: relative;z-index: 5;">
+    <table id="coverTable">
+      <tr>
+        <td><div id="holder1" class="holder"></div> </td>
+        <td><div id="holder2" class="holder"></div> </td>
+      </tr>
+      <tr>
+        <td><div id="holder3" class="holder"></div> </td>
+        <td><div id="holder4" class="holder"></div> </td>
+      </tr>
+      <tr>
+        <td><div id="holder5" class="holder"></div> </td>
+        <td><div id="holder6" class="holder"></div> </td>
+      </tr>
+      <tr>
+        <td><div id="holder7" class="holder"></div> </td>
+        <td><div id="holder8" class="holder"></div> </td>
+      </tr>
+    </table>
+  </div>
+  <div id="canvasDiv" style="position: relative;margin-top: -423px;z-index: -1;">
+    <canvas id="myCanvas" width="212" height="424">this is my canvas</canvas>
+  </div>
+  <!-- <div class="container-fluid">
+    <div id="holder"></div> 
+    <div id="holder"></div> 
+  </div>
+  <div class="container-fluid">
+    <div id="holder"></div> 
+    <div id="holder"></div> 
+  </div>
+  <div class="container-fluid">
+    <div id="holder"></div> 
+    <div id="holder"></div> 
+  </div>
+  <div class="container-fluid">
+    <div id="holder"></div> 
+    <div id="holder"></div> 
+  </div> -->
+</div>
+<article>
+  <p id="status">File API & FileReader API not supported</p>
+  <p>Drag an image from your desktop on to the drop zone above to see the browser read the contents of the file and use it as the background - without uploading the file to any servers.</p>
+</article>
+<script src="js/jquery-1.9.1.js"></script>
+<script src="js/jquery-ui-1.10.3.custom.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script>
+/*var holder = document.getElementById('holder'),
+    state = document.getElementById('status');
+
+if (typeof window.FileReader === 'undefined') {
+  state.className = 'fail';
+} else {
+  state.className = 'success';
+  state.innerHTML = 'File API & FileReader available';
+}*/
+var holder = $('.holder'),
+    state = $('#status');
+
+if (typeof window.FileReader === 'undefined') {
+  state.addClass("fail")
+} else {
+  //alert("success")
+  state.addClass("success")
+  state.html('File API & FileReader available')
+} 
+/*holder.draggable({
+  start: function( event, ui ) {}
+  drag: function( event, ui ) {}
+  stop: function( event, ui ) {}
+});*/
+var lastHover = ''
+holder.bind({
+    dragover: function () {
+       if(this.id!==lastHover){      
+        if(lastHover!=="")
+          $("#"+lastHover).removeClass("hover")  
+        lastHover = this.id
+        $(this).addClass("hover")
+       }
+        $(this).addClass('hover');
+        return false;
+    },
+    dragend: function () {
+        $(this).removeClass('hover');
+        return false;
+    },
+    drop: function (e) {
+        var id = this.id
+        this.className = '';
+        e.preventDefault();
+
+        var file = e.originalEvent.dataTransfer.files[0],
+            reader = new FileReader();
+        reader.onload = function (event) {
+          console.log(event.target);
+          drawToBox(event.target.result)
+          /*var val = 'url(' + event.target.result + ') no-repeat center'
+          $("#"+id).css( "background", val )
+          $("#"+id).css( "width", 100 )
+          $("#"+id).css( "height", 100 )*/
+          //holder.style.background = 'url(' + event.target.result + ') no-repeat center';
+        };
+        console.log(file);
+        reader.readAsDataURL(file);
+
+        return false;
+    }
+})
+function drawToBox(data){
+  var img = new Image();
+  img.src = data;
+  var c=document.getElementById("myCanvas");
+  var ctx=c.getContext("2d");
+  var pat=ctx.createPattern(img,"no-repeat");
+  ctx.beginPath(); 
+  ctx.lineWidth="2";
+  ctx.strokeStyle="green"; // Green path
+  ctx.moveTo(0,0);
+  ctx.lineTo(100,0);
+  ctx.lineTo(90,105);
+  ctx.lineTo(0,105);
+  ctx.lineTo(0,0);  
+  ctx.fillStyle=pat;
+  ctx.fill();
+}
+/*holder.ondragover = function (e) { 
+  //($(this)[0].id!==lastHover)? lastHover = $(this)[0].id : lastHover ;
+  //alert(this)
+  console.log(this)
+  e.preventDefault()
+  return;
+  $('#'+this.id).addClass("hover") 
+  return false; 
+};
+holder.ondragend = function () { this.className = ''; return false; };*/
+/*holder.ondrop = function (e) {
+  this.className = '';
+  e.preventDefault();
+
+  var file = e.dataTransfer.files[0],
+      reader = new FileReader();
+  reader.onload = function (event) {
+    console.log(event.target);
+    holder.style.background = 'url(' + event.target.result + ') no-repeat center';
+  };
+  console.log(file);
+  reader.readAsDataURL(file);
+
+  return false;
+};*/
+</script>
+<script>
+  var c=document.getElementById("myCanvas");
+  var ctx=c.getContext("2d");
+  ctx.beginPath(); 
+  ctx.lineWidth="2";
+  ctx.strokeStyle="green"; // Green path
+  ctx.moveTo(0,0);
+  ctx.lineTo(100,0);
+  ctx.lineTo(90,105);
+  ctx.lineTo(0,105);
+  ctx.lineTo(0,0);
+  ctx.stroke();
+   // Draw it
+</script>
+<script>
+/*function allowDrop(ev)
+{
+ev.preventDefault();
+}
+
+function drag(ev)
+{
+ev.dataTransfer.setData("Text",ev.target.id);
+}
+
+function drop(ev)
+{
+ev.preventDefault();
+var data=ev.dataTransfer.getData("Text");
+ev.target.appendChild(document.getElementById(data));
+}*/
+</script>
+
+<!-- <a id="html5badge" href="http://www.w3.org/html/logo/">
+<img src="http://www.w3.org/html/logo/badge/html5-badge-h-connectivity-device-graphics-multimedia-performance-semantics-storage.png" width="325" height="64" alt="HTML5 Powered with Connectivity / Realtime, Device Access, Graphics, 3D & Effects, Multimedia, Performance & Integration, Semantics, and Offline & Storage" title="HTML5 Powered with Connectivity / Realtime, Device Access, Graphics, 3D & Effects, Multimedia, Performance & Integration, Semantics, and Offline & Storage">
+</a>
+    <footer><a href="/">HTML5 demos</a>/<a id="built" href="http://twitter.com/rem">@rem built this</a>/<a href="#view-source">view source</a></footer> 
+</section>
+<a href="http://github.com/remy/html5demos"><img style="position: absolute; top: 0; left: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_left_darkblue_121621.png" alt="Fork me on GitHub" /></a> -->
+<script>
+/*$( ".holder" ).draggable({
+  start: function( event, ui ) {}
+  drag: function( event, ui ) {}
+  stop: function( event, ui ) {}
+});*/
+</script>
+<script>
+/*var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));*/
+</script>
+<script>
+/*try {
+var pageTracker = _gat._getTracker("UA-1656750-18");
+pageTracker._trackPageview();
+} catch(err) {}*/
+</script>
+</body>
+</html>
